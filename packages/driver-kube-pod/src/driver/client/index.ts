@@ -38,7 +38,7 @@ const stringify = stringifyModule.default
 
 export const loadKubeConfig = ({ kubeconfig, context }: { kubeconfig?: string; context?: string }) => {
   const kc = new k8s.KubeConfig()
-  
+
   try {
     if (kubeconfig) {
       kc.loadFromFile(kubeconfig)
@@ -48,23 +48,23 @@ export const loadKubeConfig = ({ kubeconfig, context }: { kubeconfig?: string; c
   } catch (error: any) {
     if (error.message?.includes('ENOENT') || error.message?.includes('no such file')) {
       throw new Error(
-        `Kubernetes configuration file not found. ` +
-        (kubeconfig 
-          ? `The specified kubeconfig file "${kubeconfig}" does not exist. ` 
+        'Kubernetes configuration file not found. ' +
+        (kubeconfig
+          ? `The specified kubeconfig file "${kubeconfig}" does not exist. `
           : 'No kubeconfig found in default locations (~/.kube/config, $KUBECONFIG). '
         ) +
         'Please ensure your Kubernetes configuration is properly set up.\n\n' +
         'This is a Kubernetes configuration issue, not a tunnel server problem.'
       )
     }
-    
+
     throw new Error(
       `Failed to load Kubernetes configuration: ${error.message}\n\n` +
       'Please check your kubeconfig file for syntax errors or corruption. ' +
       'This is a Kubernetes configuration issue, not a tunnel server problem.'
     )
   }
-  
+
   if (context) {
     try {
       kc.setCurrentContext(context)
@@ -76,7 +76,7 @@ export const loadKubeConfig = ({ kubeconfig, context }: { kubeconfig?: string; c
       )
     }
   }
-  
+
   // Validate that we have a current context
   try {
     const currentContext = kc.getCurrentContext()
@@ -91,14 +91,14 @@ export const loadKubeConfig = ({ kubeconfig, context }: { kubeconfig?: string; c
     if (error.message?.includes('No current context')) {
       throw error // Re-throw our own error as-is
     }
-    
+
     throw new Error(
       `Failed to get current Kubernetes context: ${error.message}\n\n` +
       'Please check your kubeconfig file. ' +
       'This is a Kubernetes configuration issue, not a tunnel server problem.'
     )
   }
-  
+
   return kc
 }
 

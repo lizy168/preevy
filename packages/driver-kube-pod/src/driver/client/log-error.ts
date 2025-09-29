@@ -11,10 +11,10 @@ export class KubernetesConnectionError extends Error {
 
 const isConnectionError = (error: any): boolean => {
   if (!error) return false
-  
+
   const message = error.message?.toLowerCase() || ''
   const code = error.code || error.response?.statusCode
-  
+
   // Common kubernetes connection error patterns
   return (
     // Network connection errors
@@ -22,7 +22,7 @@ const isConnectionError = (error: any): boolean => {
     message.includes('enotfound') ||
     message.includes('timeout') ||
     message.includes('network is unreachable') ||
-    // Kubernetes API server connection errors  
+    // Kubernetes API server connection errors
     message.includes('unable to connect to the server') ||
     message.includes('connection refused') ||
     // Authentication/authorization errors (likely config issues)
@@ -37,9 +37,9 @@ const isConnectionError = (error: any): boolean => {
 const enhanceKubernetesError = (error: any): Error => {
   if (isConnectionError(error)) {
     const message = error.message?.toLowerCase() || ''
-    
+
     let userFriendlyMessage = 'Failed to connect to Kubernetes cluster. '
-    
+
     if (message.includes('econnrefused') || message.includes('connection refused')) {
       userFriendlyMessage += 'The Kubernetes API server appears to be unreachable. Please check that your cluster is running and accessible.'
     } else if (message.includes('enotfound') || message.includes('network is unreachable')) {
@@ -55,12 +55,12 @@ const enhanceKubernetesError = (error: any): Error => {
     } else {
       userFriendlyMessage += 'Please check your Kubernetes cluster configuration and connectivity.'
     }
-    
+
     userFriendlyMessage += '\n\nThis is a Kubernetes connectivity issue, not a tunnel server problem.'
-    
+
     return new KubernetesConnectionError(userFriendlyMessage, error)
   }
-  
+
   return error
 }
 
@@ -76,7 +76,7 @@ export const logError = (log: Logger) => <
     if (e instanceof HttpError) {
       log.error(`Kubernetes API Response: ${inspect(e.body)}`)
     }
-    
+
     const enhancedError = enhanceKubernetesError(e)
     throw enhancedError
   }

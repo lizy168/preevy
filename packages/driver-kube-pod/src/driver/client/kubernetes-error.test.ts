@@ -23,7 +23,7 @@ describe('KubernetesConnectionError', () => {
       'Failed to connect to Kubernetes cluster. The Kubernetes API server appears to be unreachable. Please check that your cluster is running and accessible.\n\nThis is a Kubernetes connectivity issue, not a tunnel server problem.',
       originalError
     )
-    
+
     expect(enhanced.message).toContain('Failed to connect to Kubernetes cluster')
     expect(enhanced.message).toContain('This is a Kubernetes connectivity issue, not a tunnel server problem')
     expect(enhanced.cause).toBe(originalError)
@@ -35,7 +35,7 @@ describe('KubernetesConnectionError', () => {
       'Failed to connect to Kubernetes cluster. Could not resolve the Kubernetes API server hostname. Please check your cluster configuration and network connectivity.\n\nThis is a Kubernetes connectivity issue, not a tunnel server problem.',
       originalError
     )
-    
+
     expect(enhanced.message).toContain('Could not resolve the Kubernetes API server hostname')
     expect(enhanced.message).toContain('This is a Kubernetes connectivity issue, not a tunnel server problem')
   })
@@ -46,7 +46,7 @@ describe('KubernetesConnectionError', () => {
       'Failed to connect to Kubernetes cluster. Authentication failed. Please check your Kubernetes credentials and configuration.\n\nThis is a Kubernetes connectivity issue, not a tunnel server problem.',
       originalError
     )
-    
+
     expect(enhanced.message).toContain('Authentication failed')
     expect(enhanced.message).toContain('This is a Kubernetes connectivity issue, not a tunnel server problem')
   })
@@ -57,7 +57,7 @@ describe('KubernetesConnectionError', () => {
       'Failed to connect to Kubernetes cluster. Access denied. Please check that your Kubernetes credentials have the necessary permissions.\n\nThis is a Kubernetes connectivity issue, not a tunnel server problem.',
       originalError
     )
-    
+
     expect(enhanced.message).toContain('Access denied')
     expect(enhanced.message).toContain('This is a Kubernetes connectivity issue, not a tunnel server problem')
   })
@@ -68,7 +68,7 @@ describe('KubernetesConnectionError', () => {
       'Failed to connect to Kubernetes cluster. Connection to the Kubernetes API server timed out. Please check your cluster configuration and network connectivity.\n\nThis is a Kubernetes connectivity issue, not a tunnel server problem.',
       originalError
     )
-    
+
     expect(enhanced.message).toContain('Connection to the Kubernetes API server timed out')
     expect(enhanced.message).toContain('This is a Kubernetes connectivity issue, not a tunnel server problem')
   })
@@ -79,7 +79,7 @@ describe('KubernetesConnectionError', () => {
       'Failed to connect to Kubernetes cluster. No valid Kubernetes configuration found. Please check your kubeconfig file and ensure it contains a valid context.\n\nThis is a Kubernetes connectivity issue, not a tunnel server problem.',
       originalError
     )
-    
+
     expect(enhanced.message).toContain('No valid Kubernetes configuration found')
     expect(enhanced.message).toContain('This is a Kubernetes connectivity issue, not a tunnel server problem')
   })
@@ -87,9 +87,9 @@ describe('KubernetesConnectionError', () => {
   it('should preserve error properties correctly', () => {
     const originalError = createMockConnectionError('Test error', 500)
     originalError.stack = 'original stack trace'
-    
+
     const enhanced = new KubernetesConnectionError('Enhanced message', originalError)
-    
+
     expect(enhanced.name).toBe('KubernetesConnectionError')
     expect(enhanced.cause).toBe(originalError)
     expect(enhanced.message).toBe('Enhanced message')

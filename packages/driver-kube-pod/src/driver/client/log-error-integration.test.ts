@@ -29,9 +29,9 @@ describe('logError function enhancement', () => {
     const mockFunction = async () => {
       throw createMockNetworkError('connect ECONNREFUSED 192.168.1.100:6443', 'ECONNREFUSED')
     }
-    
+
     const wrappedFunction = logError(mockLogger)(mockFunction)
-    
+
     await expect(wrappedFunction()).rejects.toThrow(/Failed to connect to Kubernetes cluster/)
     await expect(wrappedFunction()).rejects.toThrow(/This is a Kubernetes connectivity issue, not a tunnel server problem/)
   })
@@ -40,9 +40,9 @@ describe('logError function enhancement', () => {
     const mockFunction = async () => {
       throw createMockNetworkError('getaddrinfo ENOTFOUND k8s.example.com', 'ENOTFOUND')
     }
-    
+
     const wrappedFunction = logError(mockLogger)(mockFunction)
-    
+
     await expect(wrappedFunction()).rejects.toThrow(/Could not resolve the Kubernetes API server hostname/)
     await expect(wrappedFunction()).rejects.toThrow(/This is a Kubernetes connectivity issue, not a tunnel server problem/)
   })
@@ -51,9 +51,9 @@ describe('logError function enhancement', () => {
     const mockFunction = async () => {
       throw createMockConnectionError('Unauthorized', 401)
     }
-    
+
     const wrappedFunction = logError(mockLogger)(mockFunction)
-    
+
     await expect(wrappedFunction()).rejects.toThrow(/Authentication failed/)
     await expect(wrappedFunction()).rejects.toThrow(/This is a Kubernetes connectivity issue, not a tunnel server problem/)
   })
@@ -62,9 +62,9 @@ describe('logError function enhancement', () => {
     const mockFunction = async () => {
       throw createMockConnectionError('Forbidden', 403)
     }
-    
+
     const wrappedFunction = logError(mockLogger)(mockFunction)
-    
+
     await expect(wrappedFunction()).rejects.toThrow(/Access denied/)
     await expect(wrappedFunction()).rejects.toThrow(/This is a Kubernetes connectivity issue, not a tunnel server problem/)
   })
@@ -73,9 +73,9 @@ describe('logError function enhancement', () => {
     const mockFunction = async () => {
       throw createMockNetworkError('timeout of 5000ms exceeded', 'TIMEOUT')
     }
-    
+
     const wrappedFunction = logError(mockLogger)(mockFunction)
-    
+
     await expect(wrappedFunction()).rejects.toThrow(/Connection to the Kubernetes API server timed out/)
     await expect(wrappedFunction()).rejects.toThrow(/This is a Kubernetes connectivity issue, not a tunnel server problem/)
   })
@@ -84,9 +84,9 @@ describe('logError function enhancement', () => {
     const mockFunction = async () => {
       throw new Error('no configuration has been provided, try setting KUBERNETES_SERVICE_HOST and KUBERNETES_SERVICE_PORT')
     }
-    
+
     const wrappedFunction = logError(mockLogger)(mockFunction)
-    
+
     await expect(wrappedFunction()).rejects.toThrow(/No valid Kubernetes configuration found/)
     await expect(wrappedFunction()).rejects.toThrow(/This is a Kubernetes connectivity issue, not a tunnel server problem/)
   })
@@ -96,18 +96,18 @@ describe('logError function enhancement', () => {
     const mockFunction = async () => {
       throw originalError
     }
-    
+
     const wrappedFunction = logError(mockLogger)(mockFunction)
-    
+
     await expect(wrappedFunction()).rejects.toBe(originalError)
   })
 
   it('should return successful results unchanged', async () => {
     const expectedResult = { success: true, data: 'test' }
     const mockFunction = async () => expectedResult
-    
+
     const wrappedFunction = logError(mockLogger)(mockFunction)
-    
+
     await expect(wrappedFunction()).resolves.toBe(expectedResult)
   })
 })
